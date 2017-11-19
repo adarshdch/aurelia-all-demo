@@ -1,0 +1,25 @@
+<template>
+  <!-- first, we include the Bootstrap css, which was bundled as "css/bootstrap.css" -->
+  <require from="bootstrap/css/bootstrap.css"></require>
+  <require from="./components/nav-menu.html"></require>
+  
+
+  <div>
+      <h1 style="text-align:center;">${message}</h1>
+  </div>
+  
+ 
+   <div class="row" style="border: 1px solid red;">
+     <div class="col-md-3" style="border: 1px solid blue;">
+       <nav-menu router.bind="router"></nav-menu>
+     </div>
+     <div class="col-md-9" style="border: 1px solid blue;">
+        <router-view></router-view>
+     </div>
+
+   </div>
+
+   
+   
+  
+</template>
