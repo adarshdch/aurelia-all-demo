@@ -74,6 +74,15 @@ define('components/child-component',['exports'], function (exports) {
   }
   exports.ChildComponent = ChildComponent;
 });
+define('components/event-aggregator',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  class EventAggregator {}
+  exports.EventAggregator = EventAggregator;
+});
 define('components/home',["exports"], function (exports) {
   "use strict";
 
@@ -82,6 +91,20 @@ define('components/home',["exports"], function (exports) {
   });
   class Home {}
   exports.Home = Home;
+});
+define('components/nav-menu',['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  class NavMenu {
+    constructor() {
+      this.message = 'Menu Items';
+    }
+
+  }
+  exports.NavMenu = NavMenu;
 });
 define('components/parent-component',['exports'], function (exports) {
   'use strict';
@@ -96,6 +119,32 @@ define('components/parent-component',['exports'], function (exports) {
   }
   exports.ParentComponent = ParentComponent;
 });
+define('components/route-demo',['exports', 'aurelia-router', 'aurelia-framework'], function (exports, _aureliaRouter, _aureliaFramework) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.RouteDemo = undefined;
+  class RouteDemo {
+
+    activate(params, routeConfig, navigationInstruction) {
+      this.router = navigationInstruction.router;
+    }
+
+    goToEvent($event) {
+      console.log('Navigating to event demo page...');
+      this.router.routes.forEach(element => {
+        element.nav = false;
+      });
+      //this.router.reset();
+      this.router.refreshNavigation();
+      this.router.navigate('event');
+    }
+
+  }
+  exports.RouteDemo = RouteDemo;
+});
 define('resources/index',["exports"], function (exports) {
   "use strict";
 
@@ -107,38 +156,11 @@ define('resources/index',["exports"], function (exports) {
     //config.globalResources([]);
   }
 });
-define('components/event-aggregator',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  class EventAggregator {}
-  exports.EventAggregator = EventAggregator;
-});
-define('components/route-demo',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  class RouteDemo {}
-  exports.RouteDemo = RouteDemo;
-});
-define('components/nav-menu',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  class NavMenu {}
-  exports.NavMenu = NavMenu;
-});
 define('text!app.html', ['module'], function(module) { module.exports = "<template><require from=\"bootstrap/css/bootstrap.css\"></require><require from=\"./components/nav-menu.html\"></require><div><h1 style=\"text-align:center\">${message}</h1></div><div class=\"row\" style=\"border:1px solid red\"><div class=\"col-md-3\" style=\"border:1px solid #00f\"><nav-menu router.bind=\"router\"></nav-menu></div><div class=\"col-md-9\" style=\"border:1px solid #00f\"><router-view></router-view></div></div></template>"; });
 define('text!components/child-component.html', ['module'], function(module) { module.exports = "<template><h2>I am from child component</h2><p>${message}</p></template>"; });
-define('text!components/home.html', ['module'], function(module) { module.exports = "<template><p style=\"text-align:left\">Please select action for left menu...</p></template>"; });
-define('text!components/parent-component.html', ['module'], function(module) { module.exports = "<template><require from=\"./child-component\"></require><h1>I am parent component</h1><p>${message}</p><child-component></child-component></template>>"; });
 define('text!components/event-aggregator.html', ['module'], function(module) { module.exports = "<template>Event Aggregator</template>"; });
-define('text!components/route-demo.html', ['module'], function(module) { module.exports = "<template>Route Demo</template>"; });
+define('text!components/home.html', ['module'], function(module) { module.exports = "<template><p style=\"text-align:left\">Please select action for left menu...</p></template>"; });
 define('text!components/nav-menu.html', ['module'], function(module) { module.exports = "<template bindable=\"router\"><h4>Menu Items</h4><ul><li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li></ul></template>"; });
+define('text!components/parent-component.html', ['module'], function(module) { module.exports = "<template><require from=\"./child-component\"></require><h1>I am parent component</h1><p>${message}</p><child-component></child-component></template>>"; });
+define('text!components/route-demo.html', ['module'], function(module) { module.exports = "<template><h3>Route Demo</h3><button click.delegate=\"goToEvent($event)\">Go To Event Aggregator</button></template>"; });
 //# sourceMappingURL=app-bundle.js.map

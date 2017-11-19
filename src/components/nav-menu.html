@@ -1,7 +1,7 @@
 <template bindable="router">
     <h4>Menu Items</h4>
     <ul>
-      <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
+      <li repeat.for="row of router.navigation"  class="${row.isActive ? 'active' : ''}">
         <a href.bind="row.href">${row.title}</a>
       </li>
     </ul>
