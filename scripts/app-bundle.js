@@ -129,18 +129,36 @@ define('components/route-demo',['exports', 'aurelia-router', 'aurelia-framework'
   class RouteDemo {
 
     activate(params, routeConfig, navigationInstruction) {
-      this.router = navigationInstruction.router;
+      this.parentRouter = navigationInstruction.router;
+      this.parentRouterNavigation = this.parentRouter.navigation.slice();
     }
 
     goToEvent($event) {
       console.log('Navigating to event demo page...');
-      this.router.routes.forEach(element => {
-        element.nav = false;
-      });
-      //this.router.reset();
-      this.router.refreshNavigation();
-      this.router.navigate('event');
+      // //this.router.reset();
+      // this.router.refreshNavigation();
+
+      this.parentRouter.navigate('event');
     }
+
+    configureRouter(config, router) {
+      config.map([{ route: '', moduleId: './child-component', nav: true, title: 'Child Component' }, { route: 'home', name: 'home', moduleId: './home', nav: true, title: 'Home Page' }]);
+      this.router = router;
+    }
+
+    hideComponentParentMenu() {
+      this.parentRouter.navigation = this.parentRouterNavigation.filter(function (x) {
+        return x.config.name !== 'component';
+      });
+      this.parentRouter.refreshNavigation();
+    }
+
+    showComponentParentMenu() {
+      this.parentRouter.navigation = this.parentRouterNavigation.slice();
+      this.parentRouter.refreshNavigation();
+    }
+
+    detached() {}
 
   }
   exports.RouteDemo = RouteDemo;
@@ -162,5 +180,5 @@ define('text!components/event-aggregator.html', ['module'], function(module) { m
 define('text!components/home.html', ['module'], function(module) { module.exports = "<template><p style=\"text-align:left\">Please select action for left menu...</p></template>"; });
 define('text!components/nav-menu.html', ['module'], function(module) { module.exports = "<template bindable=\"router\"><h4>Menu Items</h4><ul><li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li></ul></template>"; });
 define('text!components/parent-component.html', ['module'], function(module) { module.exports = "<template><require from=\"./child-component\"></require><h1>I am parent component</h1><p>${message}</p><child-component></child-component></template>>"; });
-define('text!components/route-demo.html', ['module'], function(module) { module.exports = "<template><h3>Route Demo</h3><button click.delegate=\"goToEvent($event)\">Go To Event Aggregator</button></template>"; });
+define('text!components/route-demo.html', ['module'], function(module) { module.exports = "<template><require from=\"./nav-menu.html\"></require><h3>Route Demo</h3><nav-menu router.bind=\"router\"></nav-menu><button click.delegate=\"goToEvent($event)\">Go To Event Aggregator</button> <button click.delegate=\"hideComponentParentMenu($event)\">Hide Component Parent Menu</button> <button click.delegate=\"showComponentParentMenu($event)\">Show Component Parent Menu</button><router-view></router-view></template>"; });
 //# sourceMappingURL=app-bundle.js.map

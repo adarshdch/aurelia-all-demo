@@ -1,5 +1,12 @@
 <template>
+  <require from="./nav-menu.html"></require>
+
   <h3>Route Demo</h3>
+  <nav-menu router.bind="router"></nav-menu>
+  
   <button click.delegate="goToEvent($event)">Go To Event Aggregator</button>
+  <button click.delegate="hideComponentParentMenu($event)">Hide Component Parent Menu</button>
+  <button click.delegate="showComponentParentMenu($event)">Show Component Parent Menu</button>
+  <router-view></router-view>
 
 </template>
