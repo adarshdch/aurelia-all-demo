@@ -11,7 +11,8 @@ export class App {
        { route: ['', 'home'],  name: 'home', moduleId: './components/home',  nav: true, title:'Home' },
        { route: ['component'],  name: 'component', moduleId: './components/parent-component',  nav: true, title:'Nested Components' },
        { route: ['event'],  name: 'event', moduleId: './components/event-aggregator',  nav: true, title:'Event Aggregator' },
-       { route: ['route'],  name: 'route', moduleId: './components/route-demo',  nav: true, title:'Route Demo' }
+       { route: ['route'],  name: 'route', moduleId: './components/route-demo',  nav: true, title:'Route Demo' },
+       { route: ['validation'],  name: 'validation', moduleId: './components/validation-demo',  nav: true, title:'Validation Demo' }
     ]);
 
     this.router = router;

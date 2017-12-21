@@ -4,7 +4,7 @@ define('app',['exports'], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  class App {
+  let App = exports.App = class App {
     constructor() {
       this.message = 'Welcome to Aurelia Demo App';
     }
@@ -12,12 +12,11 @@ define('app',['exports'], function (exports) {
     configureRouter(config, router) {
       config.title = 'Aurelia';
 
-      config.map([{ route: ['', 'home'], name: 'home', moduleId: './components/home', nav: true, title: 'Home' }, { route: ['component'], name: 'component', moduleId: './components/parent-component', nav: true, title: 'Nested Components' }, { route: ['event'], name: 'event', moduleId: './components/event-aggregator', nav: true, title: 'Event Aggregator' }, { route: ['route'], name: 'route', moduleId: './components/route-demo', nav: true, title: 'Route Demo' }]);
+      config.map([{ route: ['', 'home'], name: 'home', moduleId: './components/home', nav: true, title: 'Home' }, { route: ['component'], name: 'component', moduleId: './components/parent-component', nav: true, title: 'Nested Components' }, { route: ['event'], name: 'event', moduleId: './components/event-aggregator', nav: true, title: 'Event Aggregator' }, { route: ['route'], name: 'route', moduleId: './components/route-demo', nav: true, title: 'Route Demo' }, { route: ['validation'], name: 'validation', moduleId: './components/validation-demo', nav: true, title: 'Validation Demo' }]);
 
       this.router = router;
     }
-  }
-  exports.App = App;
+  };
 });
 define('environment',["exports"], function (exports) {
   "use strict";
@@ -47,7 +46,7 @@ define('main',['exports', './environment'], function (exports, _environment) {
   }
 
   function configure(aurelia) {
-    aurelia.use.standardConfiguration().feature('resources');
+    aurelia.use.standardConfiguration().feature('resources').plugin("aurelia-validation").plugin("aurelia-validatejs");
 
     if (_environment2.default.debug) {
       aurelia.use.developmentLogging();
@@ -66,13 +65,12 @@ define('components/child-component',['exports'], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  class ChildComponent {
+  let ChildComponent = exports.ChildComponent = class ChildComponent {
     constructor() {
       this.message = 'I am child component message';
     }
 
-  }
-  exports.ChildComponent = ChildComponent;
+  };
 });
 define('components/event-aggregator',["exports"], function (exports) {
   "use strict";
@@ -80,8 +78,7 @@ define('components/event-aggregator',["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  class EventAggregator {}
-  exports.EventAggregator = EventAggregator;
+  let EventAggregator = exports.EventAggregator = class EventAggregator {};
 });
 define('components/home',["exports"], function (exports) {
   "use strict";
@@ -89,8 +86,7 @@ define('components/home',["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  class Home {}
-  exports.Home = Home;
+  let Home = exports.Home = class Home {};
 });
 define('components/nav-menu',['exports'], function (exports) {
   'use strict';
@@ -98,13 +94,12 @@ define('components/nav-menu',['exports'], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  class NavMenu {
+  let NavMenu = exports.NavMenu = class NavMenu {
     constructor() {
       this.message = 'Menu Items';
     }
 
-  }
-  exports.NavMenu = NavMenu;
+  };
 });
 define('components/parent-component',['exports'], function (exports) {
   'use strict';
@@ -112,12 +107,11 @@ define('components/parent-component',['exports'], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  class ParentComponent {
+  let ParentComponent = exports.ParentComponent = class ParentComponent {
     constructor() {
       this.message = 'I am parent component message';
     }
-  }
-  exports.ParentComponent = ParentComponent;
+  };
 });
 define('components/route-demo',['exports', 'aurelia-router', 'aurelia-framework'], function (exports, _aureliaRouter, _aureliaFramework) {
   'use strict';
@@ -126,7 +120,7 @@ define('components/route-demo',['exports', 'aurelia-router', 'aurelia-framework'
     value: true
   });
   exports.RouteDemo = undefined;
-  class RouteDemo {
+  let RouteDemo = exports.RouteDemo = class RouteDemo {
 
     activate(params, routeConfig, navigationInstruction) {
       this.parentRouter = navigationInstruction.router;
@@ -160,8 +154,52 @@ define('components/route-demo',['exports', 'aurelia-router', 'aurelia-framework'
 
     detached() {}
 
-  }
-  exports.RouteDemo = RouteDemo;
+  };
+});
+define('components/validation-demo',['exports', 'aurelia-framework', 'aurelia-validation'], function (exports, _aureliaFramework, _aureliaValidation) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.ValidationDemo = undefined;
+
+  var _dec, _class;
+
+  let ValidationDemo = exports.ValidationDemo = (_dec = (0, _aureliaFramework.inject)(_aureliaValidation.ValidationControllerFactory), _dec(_class = class ValidationDemo {
+
+    constructor(controllerFactory) {
+      this.loginId = '';
+      this.uiModel = {
+        loginId: '',
+        password: '',
+        confirmPassword: ''
+      };
+      this.controller = controllerFactory.createForCurrentScope();
+      this.controller.validateTrigger = _aureliaValidation.validateTrigger.changeOrBlur;
+
+      _aureliaValidation.ValidationRules.ensure('loginId').required().minLength(3).withMessage('LoginId must at least be 3 chars long.').ensure('password').required().minLength(3).withMessage('Password must at least be 3 chars long.').ensure('confirmPassword').required().equals('password').withMessage('Password and confirm password must match.').on(this.uiModel);
+    }
+
+    activate(params, routeConfig, navigationInstruction) {}
+
+    bind() {
+      // ValidationRules
+      //   .ensure("loginId").required()
+      //   .ensure("password").required({ message: "^My custom error message" })
+      //   .on(this.uiModel);
+    }
+
+    updatePassword() {
+      if (this.controller.validate().length <= 0) {
+        alert("Validation successful!");
+      } else {
+        alert("Validation failed!");
+      }
+      alert(this.uiModel.loginId);
+    }
+
+  }) || _class);
 });
 define('resources/index',["exports"], function (exports) {
   "use strict";
@@ -181,4 +219,5 @@ define('text!components/home.html', ['module'], function(module) { module.export
 define('text!components/nav-menu.html', ['module'], function(module) { module.exports = "<template bindable=\"router\"><h4>Menu Items</h4><ul><li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\"><a href.bind=\"row.href\">${row.title}</a></li></ul></template>"; });
 define('text!components/parent-component.html', ['module'], function(module) { module.exports = "<template><require from=\"./child-component\"></require><h1>I am parent component</h1><p>${message}</p><child-component></child-component></template>>"; });
 define('text!components/route-demo.html', ['module'], function(module) { module.exports = "<template><require from=\"./nav-menu.html\"></require><h3>Route Demo</h3><nav-menu router.bind=\"router\"></nav-menu><button click.delegate=\"goToEvent($event)\">Go To Event Aggregator</button> <button click.delegate=\"hideComponentParentMenu($event)\">Hide Component Parent Menu</button> <button click.delegate=\"showComponentParentMenu($event)\">Show Component Parent Menu</button><router-view></router-view></template>"; });
+define('text!components/validation-demo.html', ['module'], function(module) { module.exports = "<template><h2>Change Password - Validation Demo</h2><form submit.delegate=\"updatePassword()\"><ul><li repeat.for=\"error of controller.errors\">${error.message}</li></ul><div class=\"form-group\"><label class=\"control-label\" for=\"loginId\">Login Id</label><input type=\"text\" class=\"form-control\" id=\"loginId\" placeholder=\"Login Id\" value.bind=\"uiModel.loginId & validate\"></div><div class=\"form-group\"><label class=\"control-label\" for=\"password\">Password</label><input type=\"text\" class=\"form-control\" id=\"password\" placeholder=\"Password\" value.bind=\"uiModel.password & validate\"></div><div class=\"form-group\"><label class=\"control-label\" for=\"confirmPassword\">Confirm Password</label><input type=\"email\" class=\"form-control\" id=\"confirmPassword\" placeholder=\"Confirm Password\" value.bind=\"uiModel.confirmPassword & validate\"></div><div validation-errors.bind=\"errors\"><ul if.bind=\"controller.errors\"><li repeat.for=\"error of controller.errors\"> ${error.message} </li></ul></div><button type=\"submit\" class=\"btn btn-primary\">Change Password</button></form></template>"; });
 //# sourceMappingURL=app-bundle.js.map

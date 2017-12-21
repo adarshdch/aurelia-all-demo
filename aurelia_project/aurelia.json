@@ -75,6 +75,21 @@
             "main": "aurelia-templating-router"
           },
           {
+            "name": "aurelia-validation",
+            "path": "../node_modules/aurelia-validation/dist/amd",
+            "main": "aurelia-validation"
+        },
+        {
+            "name": "aurelia-validatejs",
+            "path": "../node_modules/aurelia-validatejs/dist/amd",
+            "main": "aurelia-validatejs"
+        },
+        {
+            "name": "validate.js",
+            "path": "../node_modules/validate.js/",
+            "main": "validate"
+        },
+          {
             "name": "aurelia-testing",
             "path": "../node_modules/aurelia-testing/dist/amd",
             "main": "aurelia-testing",
@@ -123,7 +138,7 @@
     "fileExtension": ".js",
     "options": {
       "plugins": [
-        "transform-es2015-modules-amd"
+        "transform-es2015-modules-amd", "babel-plugin-transform-decorators-legacy"
       ]
     },
     "source": "src/**/*.js"
